@@ -3,6 +3,7 @@
 use App\Controllers\Auth\LoginController;
 use App\Controllers\Auth\RegisterController;
 use App\Controllers\HomeController;
+use App\Controllers\StudentController;
 
 return [
     'get::' => [
@@ -28,5 +29,12 @@ return [
     'post::register' => [
         'controller' => RegisterController::class,
         'method'     => 'register',
+    ],
+    'get::students/:id' => [
+        'controller' => StudentController::class,
+        'method'     => 'getStudentResult',
+        'params'     => [
+            'id' => 'number'
+        ]
     ],
 ];
