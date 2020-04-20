@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Core\Db\Mysql\MysqlDriver;
+use App\Domain\User;
 use Tests\AbstractTestCase;
 
 /**
@@ -66,5 +67,42 @@ abstract class ModelTestCase extends AbstractTestCase
         foreach ($this->tables as $table) {
             $this->db->exec("DELETE FROM $table");
         }
+    }
+
+    /**
+     * @return User
+     */
+    protected function buildUser(): User
+    {
+        $user = new User();
+
+        return $user->create(
+            'Dallas',
+            'dallas',
+            'dallas@example.com',
+            'dallas123'
+        );
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return int
+     */
+    protected function insertUser(User $user): int
+    {
+        $params = [
+            ':name'     => $user->getName(),
+            ':slug'     => $user->getSlug(),
+            ':email'    => $user->getEmail(),
+            ':password' => $user->getPassword(),
+        ];
+
+        $query = 'INSERT INTO users (name, slug, email, password, created_at)
+			VALUES (:name, :slug, :email, :password, NOW())';
+
+        $this->db->execute($query, $params);
+
+        return $this->db->lastInsertId();
     }
 }
